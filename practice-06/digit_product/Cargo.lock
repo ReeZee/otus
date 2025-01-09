@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "display"
+name = "digit_product"
 version = "0.1.0"
