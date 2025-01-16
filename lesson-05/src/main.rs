@@ -24,18 +24,45 @@ use matrix::Matrix;
 
 struct Display {
     // можете добавить сюда любые дополнительные поля
+    current_pixel: (u64, u64),
+    boundaries: (u32, u32),
     matrix: Matrix,
 }
 
 fn create_display(max_width: u32, max_height: u32, default_colour: u8) -> Display {
     // ваш код сюда
     Display {
+        current_pixel: (0, 0),
+        boundaries: (max_width, max_height),
         matrix: Matrix::new(max_width, max_height, default_colour),
     }
 }
 
 fn process_commands(display: &mut Display, input: Vec<u64>) {
-    // ваш код сюда
+    let mut offset = 0;
+    for (idx, command) in input.iter().enumerate() {
+        if idx < offset { continue }
+        match command {
+            1 => {
+                let x = input.get(idx + 1).unwrap().clone();
+                let y = input.get(idx + 2).unwrap().clone();
+                if x > display.boundaries.0 as u64 || y > display.boundaries.1 as u64 {
+                   panic!("Out of display boundaries");
+                }
+                display.current_pixel = (x, y);
+                offset += 2;
+            },
+            2 => {
+                let colour = input.get(idx + 1).unwrap().clone() as u8;
+                if colour > 3 || colour < 1 {
+                    panic!("No such colour");
+                }
+                display.matrix.set_colour(display.current_pixel.0, display.current_pixel.1, colour);
+                offset += 1;
+            },
+            _ => {}
+        }
+    }
 }
 
 // код ниже трогать не нужно, можете просто посмотреть его
