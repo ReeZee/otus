@@ -50,7 +50,7 @@ fn process_commands(display: &mut Display, input: Vec<u64>) {
                    panic!("Out of display boundaries");
                 }
                 display.current_pixel = (x, y);
-                offset += 2;
+                offset += 3;
             },
             2 => {
                 let colour = input.get(idx + 1).unwrap().clone() as u8;
@@ -58,7 +58,7 @@ fn process_commands(display: &mut Display, input: Vec<u64>) {
                     panic!("No such colour");
                 }
                 display.matrix.set_colour(display.current_pixel.0, display.current_pixel.1, colour);
-                offset += 1;
+                offset += 2;
             },
             _ => {}
         }
@@ -79,6 +79,8 @@ mod tests {
         let mut expected = Matrix::new(4, 4, 1);
         expected.set_colour(2, 2, 3);
         assert_eq!(display.matrix, expected);
+        println!("Happy case: ");
+        display.matrix.display();
     }
 
     #[test]
@@ -93,6 +95,28 @@ mod tests {
     fn test_error_invalid_colour() {
         let mut display = create_display(4, 4, 1);
         process_commands(&mut display, vec![1, 2, 2, 2, 5]);
+    }
+
+    #[test]
+    fn test_other_case() {
+        let mut display = create_display(5, 5, 3);
+        process_commands(&mut display, vec![1, 3, 2, 2, 1]);
+        let mut expected = Matrix::new(5, 5, 3);
+        expected.set_colour(3, 2, 1);
+        assert_eq!(display.matrix, expected);
+        println!("Other case: ");
+        display.matrix.display();
+    }
+    #[test]
+    fn test_complex_case() {
+        let mut display = create_display(5, 5, 3);
+        process_commands(&mut display, vec![1, 3, 2, 2, 1, 1, 2, 3, 2, 2]);
+        let mut expected = Matrix::new(5, 5, 3);
+        expected.set_colour(3, 2, 1);
+        expected.set_colour(2, 3, 2);
+        assert_eq!(display.matrix, expected);
+        println!("Complex case: ");
+        display.matrix.display();
     }
 }
 
