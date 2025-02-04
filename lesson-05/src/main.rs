@@ -118,6 +118,22 @@ mod tests {
         println!("Complex case: ");
         display.matrix.display();
     }
+    #[test]
+    fn test_more_complex_case() {
+        let mut display = create_display(6, 6, 3);
+        process_commands(
+            &mut display,
+            vec![1, 3, 3, 2, 1, 1, 4, 4, 2, 2, 1, 5, 5, 2, 1],
+        );
+        let mut expected = Matrix::new(6, 6, 3);
+        expected.set_colour(3, 3, 1);
+        expected.set_colour(4, 4, 2);
+        expected.set_colour(5, 5, 1);
+        assert_eq!(display.matrix, expected);
+        println!("Complex case: ");
+        display.matrix.display();
+    }
+
 }
 
 fn main() {
